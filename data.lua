@@ -16,9 +16,7 @@ local empty_sprite = {
   direction_count = 1
 }
 
-
-
--- Barge animation using 256 prerendered frames (8 directions x 32 frames)
+-- Barge animation using 256 prerendered frames (256 directions frames)
 local function make_barge_animation()
   local filenames = {}
   for i = 1, 256 do
@@ -56,7 +54,7 @@ do
     tug.allow_passengers = true
     -- Custom tugboat graphics are provided by separate graphics mod (same scheme as barge)
     -- Expected files: __tagboat_barge_graphics__/graphics/tugboat/0001.png .. 0256.png
-    -- Tugboat animation using 256 prerendered frames (8 directions x 32 frames)
+    -- Tugboat animation using 256 prerendered frames (256 directions frames)
     local function make_tug_animation()
       local filenames = {}
       for i = 1, 256 do
@@ -75,20 +73,6 @@ do
       }
     end
 
-    -- Defensive: Factorio 2.0 removed/doesn't accept "lines_per_file" in sprite definitions.
-    -- Some upstream prototypes (or graphics mods) may still contain it; strip it everywhere.
-    local function deep_strip_key(root, key, visited)
-      if type(root) ~= "table" then return end
-      visited = visited or {}
-      if visited[root] then return end
-      visited[root] = true
-      root[key] = nil
-      for _, v in pairs(root) do
-        if type(v) == "table" then
-          deep_strip_key(v, key, visited)
-        end
-      end
-    end
     -- Use our own rotated animation to avoid legacy sprite fields (e.g. "lines_per_file")
     tug.animation = make_tug_animation()
     tug.pictures = nil

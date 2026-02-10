@@ -1,5 +1,27 @@
 -- tagboat_towship/data-updates.lua
 
+-- Space Age compatibility: strip legacy key from the reported Space Age chimney.
+do
+  local function deep_strip_lines_per_file(root, visited)
+    if type(root) ~= "table" then return end
+    visited = visited or {}
+    if visited[root] then return end
+    visited[root] = true
+    root.lines_per_file = nil
+    for _, v in pairs(root) do
+      if type(v) == "table" then
+        deep_strip_lines_per_file(v, visited)
+      end
+    end
+  end
+
+  local simple_entities = data and data.raw and data.raw["simple-entity"]
+  local chimney = simple_entities and simple_entities["vulcanus-chimney"]
+  if chimney then
+    deep_strip_lines_per_file(chimney)
+  end
+end
+
 -- 1) Unlock towship-tagboat with the same tech that unlocks "boat" (fallback: enable recipe)
 do
   local function tech_unlocks_recipe(tech, recipe_name)
