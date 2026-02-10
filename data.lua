@@ -16,7 +16,7 @@ local empty_sprite = {
   direction_count = 1
 }
 
--- Barge animation using 256 prerendered frames (8 directions x 32 frames)
+-- Barge animation using 256 prerendered frames (256 directions frames)
 local function make_barge_animation()
   local filenames = {}
   for i = 1, 256 do
@@ -54,7 +54,7 @@ do
     tug.allow_passengers = true
     -- Custom tugboat graphics are provided by separate graphics mod (same scheme as barge)
     -- Expected files: __tagboat_barge_graphics__/graphics/tugboat/0001.png .. 0256.png
-    -- Tugboat animation using 256 prerendered frames (8 directions x 32 frames)
+    -- Tugboat animation using 256 prerendered frames (256 directions frames)
     local function make_tug_animation()
       local filenames = {}
       for i = 1, 256 do
