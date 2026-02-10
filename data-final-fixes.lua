@@ -60,6 +60,9 @@ local function force_clean_tug_animation()
 
   proto.animation = make_rotated_from_filenames(filenames)
   proto.pictures = nil
+
+  -- Reported failure is on towship-tagboat.animation, so sanitize this prototype explicitly.
+  deep_strip_lines_per_file(proto)
 end
 
 sanitize_space_age_chimneys()
