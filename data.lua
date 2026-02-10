@@ -16,23 +16,6 @@ local empty_sprite = {
   direction_count = 1
 }
 
--- Defensive: Factorio 2.0 removed/doesn't accept "lines_per_file" in sprite definitions.
--- Some upstream prototypes (or graphics mods) may still contain it; strip it everywhere.
-local function deep_strip_key(root, key, visited)
-  if type(root) ~= "table" then return end
-  visited = visited or {}
-  if visited[root] then return end
-  visited[root] = true
-  root[key] = nil
-  for _, v in pairs(root) do
-    if type(v) == "table" then
-      deep_strip_key(v, key, visited)
-    end
-  end
-end
-
-
-
 -- Barge animation using 256 prerendered frames (8 directions x 32 frames)
 local function make_barge_animation()
   local filenames = {}
@@ -94,7 +77,6 @@ do
     tug.animation = make_tug_animation()
     tug.pictures = nil
     tug.turret_animation = tug.turret_animation or empty_sprite
-    deep_strip_key(tug, "lines_per_file")
 
 
     -- Slightly tug-ish handling
@@ -150,7 +132,6 @@ do
     barge.animation = make_barge_animation()
     barge.turret_animation = empty_sprite
     barge.working_sound = nil
-    deep_strip_key(barge, "lines_per_file")
     -- Barge should NOT require fuel / energy
     barge.burner = nil
     barge.consumption = "0kW"
