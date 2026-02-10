@@ -41,6 +41,27 @@ if data and data.raw then
   deep_strip_key(data.raw, "lines_per_file")
 end
 
+
+local function sanitize_space_age_chimneys()
+  local simple_entities = data and data.raw and data.raw["simple-entity"]
+  if not simple_entities then return end
+
+  -- Space Age can define chimney layers with legacy `lines_per_file`.
+  local chimney = simple_entities["vulcanus-chimney"]
+  if chimney then
+    deep_convert_lines_per_file(chimney)
+    deep_strip_key(chimney, "lines_per_file")
+  end
+
+  -- Defensive: sanitize all Vulcanus chimney variants, if any are present.
+  for name, proto in pairs(simple_entities) do
+    if type(name) == "string" and string.find(name, "vulcanus%-chimney", 1, false) then
+      deep_convert_lines_per_file(proto)
+      deep_strip_key(proto, "lines_per_file")
+    end
+  end
+end
+
 local function make_rotated_from_filenames(filenames)
   return {
     type = "rotated",
@@ -75,6 +96,7 @@ local function force_clean_tug_animation()
   if proto.light_animation then deep_convert_lines_per_file(proto.light_animation) end
 end
 
+sanitize_space_age_chimneys()
 force_clean_tug_animation()
 if data and data.raw then
   deep_strip_key(data.raw, "lines_per_file")
