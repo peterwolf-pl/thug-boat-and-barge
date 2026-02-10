@@ -1,5 +1,37 @@
 -- tagboat_towship/data-updates.lua
 
+-- Space Age compatibility: sanitize known chimney prototypes in updates stage.
+-- This runs after most data-stage prototype creation and before final validation.
+local function deep_sanitize_lines_per_file(root, visited)
+  if type(root) ~= "table" then return end
+  visited = visited or {}
+  if visited[root] then return end
+  visited[root] = true
+
+  if root.lines_per_file ~= nil then
+    if root.line_length == nil then
+      root.line_length = root.lines_per_file
+    end
+    root.lines_per_file = nil
+  end
+
+  for _, v in pairs(root) do
+    if type(v) == "table" then
+      deep_sanitize_lines_per_file(v, visited)
+    end
+  end
+end
+
+do
+  local simple_entities = data and data.raw and data.raw["simple-entity"]
+  if simple_entities then
+    local chimney = simple_entities["vulcanus-chimney"]
+    if chimney then
+      deep_sanitize_lines_per_file(chimney)
+    end
+  end
+end
+
 -- 1) Unlock towship-tagboat with the same tech that unlocks "boat" (fallback: enable recipe)
 do
   local function tech_unlocks_recipe(tech, recipe_name)
