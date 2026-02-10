@@ -22,9 +22,23 @@ local function deep_convert_lines_per_file(root, visited)
   end
 end
 
+local function deep_strip_key(root, key, visited)
+  if type(root) ~= "table" then return end
+  visited = visited or {}
+  if visited[root] then return end
+  visited[root] = true
+  root[key] = nil
+  for _, v in pairs(root) do
+    if type(v) == "table" then
+      deep_strip_key(v, key, visited)
+    end
+  end
+end
+
 -- Convert the key everywhere (some graphics mods still inject it into many prototypes).
 if data and data.raw then
   deep_convert_lines_per_file(data.raw)
+  deep_strip_key(data.raw, "lines_per_file")
 end
 
 local function make_rotated_from_filenames(filenames)
@@ -62,3 +76,6 @@ local function force_clean_tug_animation()
 end
 
 force_clean_tug_animation()
+if data and data.raw then
+  deep_strip_key(data.raw, "lines_per_file")
+end
