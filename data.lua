@@ -31,17 +31,6 @@ local function deep_strip_key(root, key, visited)
   end
 end
 
--- Space Age compatibility: sanitize known prototype that can still carry legacy sprite keys.
-do
-  local chimney = data.raw["simple-entity"] and data.raw["simple-entity"]["vulcanus-chimney"]
-  if chimney then
-    deep_strip_key(chimney, "lines_per_file")
-    if chimney.pictures then
-      deep_strip_key(chimney.pictures, "lines_per_file")
-    end
-  end
-end
-
 
 
 -- Barge animation using 256 prerendered frames (8 directions x 32 frames)
