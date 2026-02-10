@@ -9,6 +9,7 @@
     "cargo-ships >= 1.0.30",
     "wooden_platform >= 0.1.1",
     "tagboat_barge_graphics",
+    "? space-age",
     "? cargo-ships-graphics"
   ],
   "description": "Adds towship-tagboat (clone of cargo-ships indep-boat) and turns Wooden Platform into a floating barge that can be attached/detached with J/K."

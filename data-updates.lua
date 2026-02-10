@@ -1,5 +1,24 @@
 -- tagboat_towship/data-updates.lua
 
+-- Defensive: Factorio 2.0 removed/doesn't accept "lines_per_file" in sprite definitions.
+-- Some mods still inject it; strip it across prototypes during updates.
+local function deep_strip_key(root, key, visited)
+  if type(root) ~= "table" then return end
+  visited = visited or {}
+  if visited[root] then return end
+  visited[root] = true
+  root[key] = nil
+  for _, v in pairs(root) do
+    if type(v) == "table" then
+      deep_strip_key(v, key, visited)
+    end
+  end
+end
+
+if data and data.raw then
+  deep_strip_key(data.raw, "lines_per_file")
+end
+
 -- 1) Unlock towship-tagboat with the same tech that unlocks "boat" (fallback: enable recipe)
 do
   local function tech_unlocks_recipe(tech, recipe_name)
